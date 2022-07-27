@@ -2,23 +2,18 @@ package com.tlglearning.fizzbuzz.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.nio.file.DirectoryNotEmptyException;
 import java.util.EnumSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class AnalysisTest {
 
-private Analysis analysis;
+final Analysis analysis = new Analysis();
 
-  @BeforeEach
-  void setUp() {
-    analysis = new Analysis();
-  }
 
   @ParameterizedTest
   @ValueSource(ints = {3,33,999_999_999})
@@ -51,11 +46,21 @@ private Analysis analysis;
   @ParameterizedTest
   @ValueSource (ints = {-10000000,-60,-5,-3,-1 })
   void analyze_negative(int value){
-    try{
+    assertThrows(IllegalArgumentException.class, new InvalidInvocation(value));
+  }
+
+  private class InvalidInvocation
+      implements Executable {
+
+    private final int value;
+
+    public InvalidInvocation(int value) {
+      this.value = value;
+    }
+
+    @Override
+    public void execute() throws Throwable {
       analysis.analyze(value);
-      fail();
-    }catch(IllegalArgumentException e) {
-      //Do nothing; this is the expected behavior.
     }
   }
 }

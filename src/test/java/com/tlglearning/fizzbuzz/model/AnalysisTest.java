@@ -46,21 +46,7 @@ final Analysis analysis = new Analysis();
   @ParameterizedTest
   @ValueSource (ints = {-10000000,-60,-5,-3,-1 })
   void analyze_negative(int value){
-    assertThrows(IllegalArgumentException.class, new InvalidInvocation(value));
+    assertThrows(IllegalArgumentException.class, new InvalidInvocation(analysis, value));
   }
 
-  private class InvalidInvocation
-      implements Executable {
-
-    private final int value;
-
-    public InvalidInvocation(int value) {
-      this.value = value;
-    }
-
-    @Override
-    public void execute() throws Throwable {
-      analysis.analyze(value);
-    }
-  }
 }
